@@ -19,24 +19,31 @@ def signin(request):
     if not request.method == 'POST':
         return JsonResponse({'error':'send a post request with valid data only'})
     
-    username = request.POST['email']
+    username = request.POST['username']
+    # if username == None:
+    #     email = request.POST['email']
+    
     password = request.POST['password']
         #========validation part=============#
-    if not re.match('\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b', username):
-        return JsonResponse({'error':'enter a valid email'})
+    # if not re.match('\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b', email):
+    #     return JsonResponse({'error':'enter a valid username'})
     
     if len(password) < 5:
         return JsonResponse({'error':'password to short'})
+    
+    if len(username) > 15:
+        return JsonResponse({'error':'username is to long'})
+
         #======================================#
 
     
     UserModel = get_user_model()
 
     try:
-        user = UserModel.objects.get(email = username)
+        user = UserModel.objects.get(username = username)
 
         if user.check_password(password):
-            usr_dict = UserModel.objects.filter(email= username).values().first()
+            usr_dict = UserModel.objects.filter(username= username).values().first()
             usr_dict.pop('password') # remove the password from the dict for security of it
 
             if user.session_token != '0':
@@ -58,6 +65,7 @@ def signin(request):
         return JsonResponse({'error':'Invalid email'})
 
     #====================================#
+@csrf_exempt
 def signout(request, id):
     """logout and remove the session_token"""
     logout(request)
@@ -80,7 +88,7 @@ def signout(request, id):
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes_by_action = {'create': [AllowAny]}
 
-    model = CustomUser.objects.all().order_by('id')
+    queryset = CustomUser.objects.all().order_by('id')
     serializer_class = UserSerializer
 
     def get_permissions(self):

@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     name = models.CharField(max_length=100, default='Anonymous')
     email = models.EmailField(max_length=250, unique=True)
-    username = None
+    username = models.CharField(max_length=15, blank=False, null = False ,unique=True)
 
     phone = models.CharField(max_length=20, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
@@ -19,5 +19,5 @@ class CustomUser(AbstractUser):
                           primary_key=True, editable=False)
 
 
-    USERNAME_FIELD = 'email'
+    # USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
