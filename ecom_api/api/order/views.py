@@ -5,9 +5,11 @@ from django.contrib.auth import get_user_model
 from .serializers import OrderSerializer
 from .models import Order
 from .utls import validated_user_session
+from rest_framework.decorators import api_view
 
 
 # Create your views here.
+@api_view(['POST'])
 def addOreder(request, id, token):
     if not validated_user_session(id, token):
         return JsonResponse({'error':'please login frist'})

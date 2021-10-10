@@ -9,10 +9,12 @@ import re
 from .serializers import UserSerializer
 from .models import CustomUser
 from .utls import generate_session_token
+from rest_framework.decorators import api_view
  
 
 # Create your views here.
 @csrf_exempt
+@api_view(['POST'])
 def signin(request):
     """validate and check auth for user signin"""
   
